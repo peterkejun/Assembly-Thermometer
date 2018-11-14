@@ -1,3 +1,8 @@
+;	created by Jun Ke
+;	Nov 14, 2018
+;	for educational use
+;	"Light_Sequencer_with_Assembly_Language_and_Microchip_PIC16F690.asm"
+;
 
 ; PIC16F690 Configuration Bit Settings
 ; Assembly source line config statements
@@ -269,7 +274,7 @@ loop
     movwf   currentPattern
     call    delay
     
-    incf    rollOverCount	;increment rollOverCount to record whether the player has missed one round of ramping up
+    bsf	    rollOverCount,0	;set rollOverCount to 1 to indicate whether the player has missed one round of ramping up
     goto    loop
     
 delay				;delay block specifically designed for switching LED patterns while checking 
@@ -339,6 +344,8 @@ endLongDelay
     return
     
 result
+    btfsc   rollOverCount,0
+    goto    notGood		;if the LEDs has ramped up for at least one round, restart the game
     btfsc   currentPattern,3	;if player reacted before 3rd LED was on, celebrate, otherwise restart the game
     goto    notGood
     goto    celebration
